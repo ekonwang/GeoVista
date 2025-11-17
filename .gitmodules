@@ -1,0 +1,3 @@
+[submodule "external/gpt-researcher-tool"]
+	path = external/gpt-researcher-tool
+	url = https://github.com/ekonwang/gpt-researcher-tool.git
