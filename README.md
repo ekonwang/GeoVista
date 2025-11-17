@@ -38,7 +38,7 @@ from [HuggingFace](https://huggingface.co/LibraTree/GeoVista-RL-6k-7B) and place
 ![](assets/figure_1_thinking_trajectory.png)
 
 
-## Benchmarks
+## Benchmark
 
 ![](assets/figure-2-benchmark-evaluation.png)
 
@@ -50,9 +50,9 @@ from [HuggingFace](https://huggingface.co/LibraTree/GeoVista-RL-6k-7B) and place
   <img src="assets/figure-3-benchmark.png" width="50%">
 </p>
 
-- GeoBench is a high-resolution, multi-source, globally annotated dataset to evaluate models’ general geolocalization ability.
+> GeoBench is the first high-resolution, multi-source, globally annotated dataset to evaluate agentic models’ general geolocalization ability.
 
-- We assess other geolocalization benchmarks with ours along five axes: **Global Coverage (GC)**, indicating whether images span diverse regions worldwide; **Reasonable Localizability (RC)**, measuring whether non-localizable or trivially localizable images are filtered out to preserve meaningful difficulty; **High Resolution (HR)**, requiring all images to have at least (1,\mathrm{M}) pixels for reliable visual clue extraction; **Data Variety (DV)**, capturing whether multiple image modalities or sources are included to test generalization; and **Nuanced Evaluation (NE)**, which checks whether precise coordinates are available to enable fine-grained distance-based metrics such as haversine error.
+- We assess other geolocalization benchmarks with ours along five axes: **Global Coverage (GC)**, indicating whether images span diverse regions worldwide; **Reasonable Localizability (RC)**, measuring whether non-localizable or trivially localizable images are filtered out to preserve meaningful difficulty; **High Resolution (HR)**, requiring all images to have at least (1,\mathrm{M}) pixels for reliable visual clue extraction; **Data Variety (DV)**, capturing whether multiple image modalities or sources are included to test generalization; and **Nuanced Evaluation (NE)**, which checks whether precise coordinates are available to enable fine-grained distance-based metrics such as haversine distance gap.
 
 
 | **Benchmark** | **Year** | **GC** | **RC** | **HR** | **DV** | **NE** |
@@ -66,12 +66,16 @@ from [HuggingFace](https://huggingface.co/LibraTree/GeoVista-RL-6k-7B) and place
 | **GeoBench (ours)** | 2025 | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 
-## Evaluation
+## Inference and Evaluation on GeoBench
 
 We provide the whole inference and evaluation pipeline for GeoVista on GeoBench.
 
 - (Release soon) To run evaluation on GeoBench, please refer to [evaluation.md](docs/evaluation.md).
 
+
+## Acknowledgements
+
+- (TODO)
 
 ## Citation
 Please consider citing our paper and starring this repo if you find them helpful. Thank you!
