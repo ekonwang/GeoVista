@@ -32,7 +32,9 @@ We use [Tavily](https://www.tavily.com/) during inference and training. You can 
 from [HuggingFace](https://huggingface.co/LibraTree/GeoVista-RL-6k-7B), place it in the `./.temp/checkpoints/LibraTree/GeoVista-RL-6k-7B` directory.
 
 ```bash
-python3 scripts/download_hf.py --model LibraTree/GeoVista-RL-6k-7B --local_model_dir .temp/checkpoints/
+python3 scripts/download_hf.py \
+--model LibraTree/GeoVista-RL-6k-7B \
+--local_model_dir .temp/checkpoints/
 ```
 
 then deploy the GeoVista model with vllm:
@@ -46,7 +48,9 @@ bash inference/vllm_deploy_geovista_rl_6k.sh
 4. Run an example inference
 
 ```bash
-python eval/example.py --multimodal_input examples/geobench-example.png --question "Please analyze where is the place."
+python eval/example.py \
+--multimodal_input examples/geobench-example.png \
+--question "Please analyze where is the place."
 ```
 
 You will see the model's thinking trajectory and final answer in the console output.
