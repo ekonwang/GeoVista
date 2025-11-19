@@ -11,3 +11,6 @@ pip install -e .
 # for web search infra
 git submodule update --init --recursive
 bash external/gpt-researcher-tool/search_setup_minimal.sh
+
+# finalize
+bash install_geovista.sh
