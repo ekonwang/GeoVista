@@ -1,10 +1,13 @@
 
 cd $(dirname $0)
-
 mkdir -p .temp
-git submodule update --init --recursive
 
-pip install -e .
-bash external/gpt-researcher-tool/search_setup_minimal.sh
-
+# for basic requirements
 bash install_geovista.sh
+
+# for verl (reinforcement learning)
+pip install -e .
+
+# for web search infra
+git submodule update --init --recursive
+bash external/gpt-researcher-tool/search_setup_minimal.sh

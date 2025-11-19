@@ -33,7 +33,7 @@ install_requires = [
     "pandas",
     "datasets",
     "peft",
-    "pyarrow>=15.0.0",
+    # "pyarrow>=15.0.0",
     "pybind11",
     "pylatexenc",
     "ray[default]>=2.10",

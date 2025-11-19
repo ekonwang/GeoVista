@@ -1,3 +1,6 @@
+pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0
+pip install pyarrow==19.0.0 
+pip install tiktoken==0.8.0
 pip install evaluate
 pip install blake3
 pip install depyf==0.18.0
@@ -31,5 +34,5 @@ pip install pillow
 pip install autogen
 pip install pyautogen
 pip install google-generativeai==0.8.5
-pip install transformers==4.51.0 datasets==3.3.2 pyarrow==19.0.0 
+pip install transformers==4.51.0 datasets==3.3.2
 # pip install click==8.2.1
