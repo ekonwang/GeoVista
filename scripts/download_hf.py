@@ -6,9 +6,6 @@ import os
 import sys
 from utils import print_error
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)) + '/..') # spiral-vagen
-print(os.getcwd())
-
 import argparse
 
 def parse_args():
