@@ -191,4 +191,4 @@ Please consider citing our paper and starring this repo if you find them helpful
 ## Acknowledgements
 
 - We thank [Tavily](https://www.tavily.com/), [Google Cloud](https://cloud.google.com/) for providing reliable web search API and geocoding services for research use. Also we thank [Mapillary](https://www.mapillary.com/?locale=zh_CN) for providing high-quality street-level images around the world.
-- We would like to thank the contributors to the [VeRL](https://github.com/volcengine/verl), [TRL](https://github.com/huggingface/trl), [gpt-researcher](https://github.com/assafelovic/gpt-researcher) repositories, for their open-sourced framework.
+- We would like to thank the contributors to the [VeRL](https://github.com/volcengine/verl), [TRL](https://github.com/huggingface/trl), [gpt-researcher](https://github.com/assafelovic/gpt-researcher) and [DeepEyes](https://github.com/Visual-Agent/DeepEyes) repositories, for their open-sourced framework or research.
