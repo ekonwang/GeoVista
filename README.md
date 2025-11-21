@@ -29,7 +29,9 @@
   </a>
 </div>
 
-*\* This repository is intended solely for research purposes.*
+<div align="center">
+  *\* This repository is intended solely for research purposes.*
+</div>
 
 ## Quick Start
 
