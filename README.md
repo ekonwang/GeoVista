@@ -16,7 +16,7 @@
   <br>
 
   <a href="https://arxiv.org/abs/2511.15705">
-    <img src="https://img.shields.io/badge/ArXiv-DeepEyes-brown?logo=arxiv" alt="Paper">
+    <img src="https://img.shields.io/badge/ArXiv-GeoVista-brown?logo=arxiv" alt="Paper">
   </a>
   <a href="https://huggingface.co/datasets/LibraTree/GeoBench">
     <img src="https://img.shields.io/badge/%F0%9F%A4%97%20huggingface-GeoBench-blue" alt="GeovistaBench">
