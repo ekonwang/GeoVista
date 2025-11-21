@@ -1,21 +1,39 @@
-<p align="center">
+<!-- <p align="center">
   <img src="assets/avatar-png-512.webp" width="20%" alt="GeoVista Avatar">
 </p>
 
-# GeoVista: Web-Augmented Agentic Visual Reasoning for Geolocalization
+# GeoVista: Web-Augmented Agentic Visual Reasoning for Geolocalization -->
 
 <!-- <div align="center">
-[💻 Code](https://github.com/ekonwang/GeoVista) | 📃 Paper | [🤗 GeoVista-RL-6k-7B](https://huggingface.co/LibraTree/GeoVista-RL-6k-7B)
+<a href="https://github.com/ekonwang/GeoVista">💻 Code</a> | <a href="https://arxiv.org/abs/2511.15705">📃 Technical Report</a> | <a href="https://huggingface.co/LibraTree/GeoVista-RL-6k-7B">🤗 GeoVista-RL-6k-7B</a> | <a href="https://huggingface.co/datasets/LibraTree/GeoBench">🤗 GeoVista-Bench (GeoBench)</a> | <a href="https://ekonwang.github.io/geo-vista/"><img src="https://github.githubassets.com/favicons/favicon.svg" width="16" alt="GitHub"> Project Page</a>
 </div> -->
 
+
 <div align="center">
-<a href="https://github.com/ekonwang/GeoVista">💻 Code</a> | <a href="https://arxiv.org/abs/2511.15705">📃 Technical Report</a> | <a href="https://huggingface.co/LibraTree/GeoVista-RL-6k-7B">🤗 GeoVista-RL-6k-7B</a> | <a href="https://huggingface.co/datasets/LibraTree/GeoBench">🤗 GeoVista-Bench (GeoBench)</a> | <a href="https://ekonwang.github.io/geo-vista/"><img src="https://github.githubassets.com/favicons/favicon.svg" width="16" alt="GitHub"> Project Page</a>
+  <img src="assets/avatar-png-512.webp" alt="logo" height="100">
+  <h1 style="font-size: 32px; font-weight: bold;"> GeoVista: Web-Augmented Agentic Visual Reasoning for Geolocalization </h1>
+
+  <br>
+
+  <a href="https://arxiv.org/abs/2511.15705">
+    <img src="https://img.shields.io/badge/ArXiv-DeepEyes-brown?logo=arxiv" alt="Paper">
+  </a>
+  <a href="https://huggingface.co/datasets/LibraTree/GeoBench">
+    <img src="https://img.shields.io/badge/🤗 huggingface-Dataset-blue" alt="Geovista-Bench">
+  </a>
+  <a href="https://huggingface.co/LibraTree/GeoVista-RL-6k-7B">
+    <img src="https://img.shields.io/badge/🤗 huggingface-Model-purple" alt="GeoVista-RL-6k-7B">
+  </a>
+  <a href="https://ekonwang.github.io/geo-vista/">
+    <img src="https://img.shields.io/badge/-HomePage-black?logo=github" alt="Webpage">
+  </a>
 </div>
+
+
+## Quick Start
 
 <!-- ![](./assets/visuothink.png) -->
 ![](./assets/agentic_pipeline.webp)
-
-## Quick Start
 
 1. Setup the environment:
 ```bash
