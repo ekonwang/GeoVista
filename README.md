@@ -177,11 +177,14 @@ You can acclerate the evaluation process by changing the `workers` argument in t
 ## BibTex
 Please consider citing our paper and starring this repo if you find them helpful. Thank you!
 ```bibtex
-@misc{wang2025geovista,
+@misc{wang2025geovistawebaugmentedagenticvisual,
       title={GeoVista: Web-Augmented Agentic Visual Reasoning for Geolocalization}, 
-      author={Yikun Wang et al.},
+      author={Yikun Wang and Zuyan Liu and Ziyi Wang and Pengfei Liu and Han Hu and Yongming Rao},
       year={2025},
-      url={https://github.com/ekonwang/GeoVista}, 
+      eprint={2511.15705},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2511.15705}, 
 }
 ```
 
