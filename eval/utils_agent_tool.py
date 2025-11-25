@@ -297,7 +297,7 @@ def search_tool_core(query: str, debug: bool = False, retriever_name: str = 'tav
 				"num_results": len(search_results) if isinstance(search_results, list) else "n/a"
 			})
 		if len(search_results) == 0:
-			raise ValueError("Empty search results!!")
+			raise ValueError("Empty search results!! Please Check the availability of the search API key and network connection.")
 		return {
 			"success": True,
 			"query": query,
