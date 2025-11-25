@@ -16,10 +16,13 @@ import traceback
 from pathlib import Path
 from typing import Any, Dict, List
 
-# Allow importing sibling modules from repo root
+# Allow importing sibling modules from repo root and eval helpers directly
 REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+EVAL_DIR = REPO_ROOT / "eval"
+for path in (REPO_ROOT, EVAL_DIR):
+    path_str = str(path)
+    if path_str not in sys.path:
+        sys.path.insert(0, path_str)
 
 from eval.inference_agent_tool_mode import (  # type: ignore
     MAX_CROP_CALLS,
@@ -40,6 +43,9 @@ from eval.utils_agent_tool import (  # type: ignore
     reformat_response,
 )
 from eval.utils_vllm import chat_vllm  # type: ignore
+
+
+
 from utils import print_hl  # type: ignore
 
 # Simple ANSI colors
