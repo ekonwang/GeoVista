@@ -36,4 +36,9 @@ pip install autogen
 pip install pyautogen
 pip install google-generativeai==0.8.5
 pip install transformers==4.51.0 datasets==3.3.2
+
+# vllm serve
+pip install   "fastapi<0.113"   "pydantic<3"   "uvicorn[standard]"   starlette   aiohttp   httpx   websockets   watchfiles   prometheus_client   prometheus-fastapi-instrumentator   python-json-logger   
+pip install orjson   python-multipart   psutil   py-cpuinfo   partial-json-parser   ijson   pyzmq   msgspec   gguf   importlib-metadata   "mistral_common[opencv]"   pyyaml   six
+pip install "einops>=0.7"
 # pip install click==8.2.1
