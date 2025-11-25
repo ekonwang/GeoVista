@@ -71,6 +71,8 @@ bash inference/vllm_deploy_geovista_rl_6k.sh
 4. Run an example inference
 
 ```bash
+export VLLM_PORT=8000
+export VLLM_HOST="localhost"
 python examples/infer_example.py \
 --multimodal_input examples/geobench-example.png \
 --question "Please analyze where is the place."

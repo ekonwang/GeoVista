@@ -23,7 +23,6 @@ from utils_vllm import chat_vllm as chat_gemini
 
 from gpt_researcher.search_worker import run_search
 from utils import print_hl
-from prompt import PROMPT
 
 # Constants
 TOOL_CALL_PATTERN = re.compile(r"<tool_call>\s*(\{[\s\S]*?\})\s*</tool_call>", re.MULTILINE)
