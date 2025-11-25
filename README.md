@@ -195,6 +195,10 @@ Please consider citing our paper and starring this repo if you find them helpful
 }
 ```
 
+## Star History
+
+[StarHistory](https://api.star-history.com/svg?repos=ekonwang/GeoVista&type=date&legend=top-left)
+
 ## Acknowledgements
 
 - We thank [Tavily](https://www.tavily.com/), [Google Cloud](https://cloud.google.com/) for providing reliable web search API and geocoding services for research use. Also we thank [Mapillary](https://www.mapillary.com/?locale=zh_CN) for providing high-quality street-level images around the world.
