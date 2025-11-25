@@ -1,4 +1,11 @@
 pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0
+
+# [Note] Running pip without `--no-deps` will also try to install xformers, and building xformers often fails with build errors.
+pip install vllm==0.8.2 --no-deps
+
+# flash attn
+python -m pip install "flash-attn==2.5.8" --no-build-isolation
+
 pip install pyarrow==19.0.0 
 pip install tiktoken==0.8.0
 pip install langchain==0.3.27
@@ -15,7 +22,6 @@ pip install mistral_common[opencv]==1.5.4
 pip install numba==0.60.0
 pip install outlines==0.1.11
 pip install ray==2.42.1
-pip install vllm==0.8.2 --no-deps
 pip install -U pynvml
 pip install mathruler
 pip install pydantic --upgrade
