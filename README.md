@@ -197,7 +197,7 @@ Please consider citing our paper and starring this repo if you find them helpful
 
 ## Star History
 
-[StarHistory](https://api.star-history.com/svg?repos=ekonwang/GeoVista&type=date&legend=top-left)
+![StarHistory](https://api.star-history.com/svg?repos=ekonwang/GeoVista&type=date&legend=top-left)
 
 ## Acknowledgements
 
