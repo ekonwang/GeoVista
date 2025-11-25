@@ -1,13 +1,3 @@
-<!-- <p align="center">
-  <img src="assets/avatar-png-512.webp" width="20%" alt="GeoVista Avatar">
-</p>
-
-# GeoVista: Web-Augmented Agentic Visual Reasoning for Geolocalization -->
-
-<!-- <div align="center">
-<a href="https://github.com/ekonwang/GeoVista">💻 Code</a> | <a href="https://arxiv.org/abs/2511.15705">📃 Technical Report</a> | <a href="https://huggingface.co/LibraTree/GeoVista-RL-6k-7B">🤗 GeoVista-RL-6k-7B</a> | <a href="https://huggingface.co/datasets/LibraTree/GeoBench">🤗 GeoVista-Bench (GeoBench)</a> | <a href="https://ekonwang.github.io/geo-vista/"><img src="https://github.githubassets.com/favicons/favicon.svg" width="16" alt="GitHub"> Project Page</a>
-</div> -->
-
 
 <div align="center">
   <img src="assets/avatar.webp" alt="logo" height="200">
@@ -18,7 +8,7 @@
   <a href="https://arxiv.org/abs/2511.15705">
     <img src="https://img.shields.io/badge/ArXiv-GeoVista-brown?logo=arxiv" alt="Paper">
   </a>
-  <a href="https://huggingface.co/datasets/LibraTree/GeoBench">
+  <a href="https://huggingface.co/datasets/LibraTree/GeoVistaBench">
     <img src="https://img.shields.io/badge/%F0%9F%A4%97%20huggingface-GeoBench-blue" alt="GeovistaBench">
   </a>
   <a href="https://huggingface.co/papers/date/2025-11-24">
@@ -90,7 +80,7 @@ You will see the model's thinking trajectory and final answer in the console out
 
 ![](assets/figure-2-benchmark-evaluation.webp)
 
-- We have already released the [GeoVista-Bench (GeoBench)](https://huggingface.co/datasets/LibraTree/GeoBench) Dataset on HuggingFace 🤗, a benchmark that includes photos and panoramas from around the world, along with a subset of satellite images of different cities to rigorously evaluate the geolocalization ability of agentic models.
+- We have already released the [GeoVista-Bench (GeoBench)](https://huggingface.co/datasets/LibraTree/GeoVistaBench) Dataset on HuggingFace 🤗, a benchmark that includes photos and panoramas from around the world, along with a subset of satellite images of different cities to rigorously evaluate the geolocalization ability of agentic models.
 
 <!-- ![](assets/figure-3-benchmark.webp) -->
 
@@ -120,11 +110,11 @@ We provide the whole inference and evaluation pipeline for GeoVista on GeoBench.
 
 ### Inference
 
-- Download the GeoBench dataset from [HuggingFace](https://huggingface.co/datasets/LibraTree/GeoBench) and place it in the `./.temp/datasets` directory.
+- Download the GeoBench dataset from [HuggingFace](https://huggingface.co/datasets/LibraTree/GeoVistaBench) and place it in the `./.temp/datasets` directory.
 
 ```bash
 python3 scripts/download_hf.py \
---dataset LibraTree/GeoBench \
+--dataset LibraTree/GeoVistaBench \
 --local_dataset_dir ./.temp/datasets
 ```
 
