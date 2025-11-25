@@ -230,7 +230,7 @@ if __name__ == '__main__':
     try:
         # or set os.environ["VLLM_PORT"] = "8000"
         # response = chat_vllm(messages, port=9001, host="29.210.133.11")
-        response = chat_vllm(messages, port=12520)
+        response = chat_vllm(messages, port=os.environ["VLLM_PORT"])
         print(response)
     except Exception as e:
         print(f"Error: {e}")
