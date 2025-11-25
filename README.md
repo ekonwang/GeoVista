@@ -21,6 +21,9 @@
   <a href="https://huggingface.co/datasets/LibraTree/GeoBench">
     <img src="https://img.shields.io/badge/%F0%9F%A4%97%20huggingface-GeoBench-blue" alt="GeovistaBench">
   </a>
+  <a href="https://huggingface.co/papers/date/2025-11-24">
+    <img src="https://img.shields.io/badge/%F0%9F%A4%97%20huggingface-Daily%20Paper-green" alt="GeovistaBench">
+  </a>
   <a href="https://huggingface.co/LibraTree/GeoVista-RL-6k-7B">
     <img src="https://img.shields.io/badge/🤗 huggingface-Model-purple" alt="GeoVista-RL-6k-7B">
   </a>
