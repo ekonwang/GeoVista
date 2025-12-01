@@ -1,0 +1,44 @@
+import os
+import json
+import numpy as np
+import multiprocessing
+multiprocessing.set_start_method('spawn', force=True)
+import argparse
+import torch
+from tqdm import tqdm
+import math
+from io import BytesIO
+from PIL import Image
+import base64
+import io
+import uuid
+from pathlib import Path
+from openai import OpenAI
+import requests
+
+from utils import print_hl, print_error
+
+
+client = OpenAI(
+    api_key=,
+    # base_url="https://172.203.11.191:3826/v1",
+)
+MODEL_NAME = 'gpt-5'
+MAX_COMPLETION_TOKENS = 10240
+
+def chat_gpt5(messages, model_name=MODEL_NAME, max_completion_tokens=MAX_COMPLETION_TOKENS):
+    params = {
+        "model": model_name,
+        "messages": messages,
+        "max_completion_tokens": max_completion_tokens,
+    }
+    response = client.chat.completions.create(**params)
+    return response.choices[0].message.content
+
+
+if __name__ == "__main__":
+    messages = [
+        {"role": "user", "content": "Hello, how are you?"}
+    ]
+    response = chat_gpt5(messages)
+    print(response)
