@@ -9,10 +9,10 @@ import json
 
 def _base64_encode_image(image_file: str):
     """
-    支持本地路径或 http(s) URL。
-    返回 (base64_str, image_format)；image_format 例如 'jpeg', 'png'
+    Supports local paths or http(s) URLs.
+    Returns (base64_str, image_format); image_format e.g., 'jpeg', 'png'
     """
-    # 统一用 PIL 打开并转码为 JPEG，保证 MIME 与字节一致，减少体积
+    # Open via PIL and transcode to JPEG to keep MIME/bytes consistent and reduce size
     try:
         if image_file.startswith('http://') or image_file.startswith('https://'):
             resp = requests.get(image_file, timeout=30)
@@ -33,7 +33,7 @@ def _base64_encode_image(image_file: str):
         image_bytes = buf.getvalue()
         image_format = 'jpeg'
     except Exception:
-        # 回落：如果 PIL 打开失败，仍尝试按原始字节发送，但 MIME 与数据可能不匹配，尽量避免走到这里
+        # Fallback: if PIL fails, still try sending raw bytes; MIME may not match data, avoid this path when possible
         if image_file.startswith('http://') or image_file.startswith('https://'):
             resp = requests.get(image_file, timeout=30)
             resp.raise_for_status()
@@ -49,7 +49,7 @@ def _base64_encode_image(image_file: str):
 
 def _convert_to_openai_format(messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
-    将 eval_mat 风格的输入转换为 OpenAI API 格式
+    Convert eval_mat-style input to OpenAI API format
     """
     converted_messages = []
     
@@ -83,7 +83,7 @@ def _convert_to_openai_format(messages: List[Dict[str, Any]]) -> List[Dict[str, 
                             openai_content.append({"type": "text", "text": text_val})
                     
                     elif item_type in ['image_url', 'image']:
-                        # 兼容多种格式（image_url/url/value/b64_json/detail）
+                        # Support multiple shapes (image_url/url/value/b64_json/detail)
                         url = None
                         detail = item.get('detail')
                         b64_json = None
@@ -131,19 +131,19 @@ def chat_gemini(
     **kwargs
 ) -> str:
     """
-    使用 vLLM 服务进行聊天推理
+    Use vLLM service for chat inference.
     
-    参数:
-    - messages: 按 eval_mat 风格的图文交错 message 列表
-    - model_name: 模型名称（应与 vLLM 服务中的 served-model-name 一致）
-    - api_url: vLLM 服务的 API URL
-    - api_key: API 密钥（可选，vLLM 默认不需要）
-    - timeout: 请求超时时间
-    - temperature: 采样温度
-    - max_tokens: 最大生成 token 数
+    Parameters:
+    - messages: Interleaved text-image message list in eval_mat style
+    - model_name: Model name (should match served-model-name in vLLM)
+    - api_url: vLLM service API URL
+    - api_key: API key (optional; vLLM typically does not require)
+    - timeout: Request timeout
+    - temperature: Sampling temperature
+    - max_tokens: Maximum generation tokens
     
-    返回:
-    - str: 模型回答
+    Returns:
+    - str: Model answer
     """
 
     port = port or int(os.getenv("VLLM_PORT", 8000))
@@ -151,10 +151,10 @@ def chat_gemini(
     # print(host, port)
     api_url = f"http://{host}:{port}/v1/chat/completions"
     
-    # 转换消息格式
+    # Convert message format
     openai_messages = _convert_to_openai_format(messages)
     
-    # 构建请求载荷
+    # Build request payload
     payload = {
         "model": model_name,
         "messages": openai_messages,
@@ -165,7 +165,7 @@ def chat_gemini(
         **kwargs
     }
     
-    # 设置请求头
+    # Set request headers
     headers = {
         "Content-Type": "application/json"
     }
@@ -174,7 +174,7 @@ def chat_gemini(
         headers["Authorization"] = f"Bearer {api_key}"
     
     try:
-        # 发送请求
+        # Send request
         response = requests.post(
             api_url,
             json=payload,
@@ -184,7 +184,7 @@ def chat_gemini(
         )
         response.raise_for_status()
         
-        # 解析响应
+        # Parse response
         data = response.json()
         
         if "choices" in data and len(data["choices"]) > 0:
@@ -194,7 +194,7 @@ def chat_gemini(
             elif "text" in choice:
                 return choice["text"]
         
-        # 如果无法解析正常响应，返回完整响应用于调试
+        # If unable to parse a normal response, return full response for debugging
         raise ValueError(f"Unexpected response format: {data}")
         
     except requests.exceptions.RequestException as e:
@@ -209,12 +209,12 @@ def chat_vllm(
     **kwargs
 ) -> str:
     """
-    chat_gemini 的别名，保持接口一致性
+    Alias of chat_gemini to keep interface consistency
     """
     return chat_gemini(messages, **kwargs)
 
 if __name__ == '__main__':
-    # 测试代码
+    # Test code
     messages = [
         {"role": "system", "content": "You are a helpful assistant."},
         {

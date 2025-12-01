@@ -21,12 +21,12 @@ from utils import print_hl, print_error
 
 client = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", ""),
-    api_base=os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1"
+    base_url=os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1")
 )
 MODEL_NAME = 'gpt-5-nano'
 MAX_COMPLETION_TOKENS = 10240
 
-def chat_gpt5(messages, model_name=MODEL_NAME, max_completion_tokens=MAX_COMPLETION_TOKENS):
+def chat_gpt5_nano(messages, model_name=MODEL_NAME, max_completion_tokens=MAX_COMPLETION_TOKENS):
     params = {
         "model": model_name,
         "messages": messages,
@@ -40,5 +40,5 @@ if __name__ == "__main__":
     messages = [
         {"role": "user", "content": "Hello, how are you?"}
     ]
-    response = chat_gpt5(messages)
+    response = chat_gpt5_nano(messages)
     print_hl(response)

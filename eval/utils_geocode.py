@@ -4,7 +4,7 @@ import os
 import unicodedata
 from typing import Any, Callable, Dict, Optional, Tuple
 
-from utils_api import chat_4o_mini
+from utils_api import chat_gpt5_nano as chat_fn
 
 # =========================
 # Common helpers
@@ -16,7 +16,7 @@ def _ascii_lower(s: Optional[str]) -> str:
     s = unicodedata.normalize("NFKD", str(s))
     s = s.encode("ascii", "ignore").decode("ascii")
     s = s.lower().strip()
-    # 将所有逗号/空白规整为 ", " 分隔
+    # Normalize all commas/whitespace to ', ' separators
     s = re.sub(r"[,\s]+", " ", s)
     s = re.sub(r"\s*,\s*", ", ", s.replace(",", " , "))
     s = re.sub(r"\s+", " ", s).strip(" ,")
@@ -27,14 +27,14 @@ def _extract_json_obj(s: str) -> Optional[Dict[str, Any]]:
     if not s:
         return None
     s = s.strip()
-    # 直接 JSON
+    # Direct JSON
     try:
         obj = json.loads(s)
         if isinstance(obj, dict):
             return obj
     except Exception:
         pass
-    # 回退：取第一段 {...}
+    # Fallback: use the first {...} segment
     start = s.find("{"); end = s.rfind("}")
     if start != -1 and end != -1 and end > start:
         snippet = s[start:end+1]
@@ -47,7 +47,7 @@ def _extract_json_obj(s: str) -> Optional[Dict[str, Any]]:
     return None
 
 # =========================
-# 函数一：用 4o-mini 抽取地址（新增 debug）
+# Function 1: extract address using 4o-mini (predictive address extractor)
 # ========================
 
 def extract_pred_address_v2(
@@ -59,10 +59,10 @@ def extract_pred_address_v2(
     normalize: bool = False,
 ) -> str:
     """
-    从自由文本中抽取最终地址字符串（pred 地址）。始终返回一个 str。
-    - chat_fn: 形如 chat_4o_mini(messages, api_key=None, timeout=30) -> str
-    - 失败或不可解析时，返回固定兜底："honiara, guadalcanal, solomon islands"
-    - debug=True 时，会打印每次尝试的提示级别、原始响应、解析错误等。
+    Extract the final address string from free text (pred address). Always returns a str.
+    - chat_fn: e.g., chat_gpt5_nano(messages, api_key=None, timeout=30) -> str
+    - On failure or when unparsable, return the fixed fallback: "honiara, guadalcanal, solomon islands"
+    - When debug=True, prints each attempt's strictness level, raw response, and parsing errors.
     """
     FALLBACK_ADDR = "honiara, guadalcanal, solomon islands"
 
@@ -121,7 +121,7 @@ def extract_pred_address_v2(
             msgs = _messages(payload, strict_level=attempt)
             if debug:
                 print(f"[extract_pred_address] attempt={attempt} sending messages")
-            resp = chat_4o_mini(msgs, api_key=api_key, timeout=timeout)
+            resp = chat_fn(msgs, api_key=api_key, timeout=timeout)
             if debug:
                 preview = (resp[:300] + "...") if isinstance(resp, str) and len(resp) > 300 else resp
                 print(f"[extract_pred_address] raw response: {preview!r}")
@@ -155,7 +155,7 @@ def extract_pred_address_v2(
 
 
 # =========================
-# 函数二：地址 -> 经纬度（新增 debug）
+# Function 2: geocode address (predictive address -> geolocation point)
 # =========================
 
 def geocode_address(
@@ -166,11 +166,11 @@ def geocode_address(
     allow_fallback: bool = True,
 ) -> Dict[str, float]:
     """
-    将地址解析为经纬度。
-    - 优先使用 Google Geocoding API（提供 google_api_key 时），失败回退到 OSM Nominatim。
-    - 成功返回: {"lat": <float>, "lng": <float>}
-    - 失败将抛出 ValueError。
-    - debug=True 时打印所用服务、URL（去掉 key）、返回片段与错误。
+    Resolve the address to latitude/longitude.
+    - Prefer Google Geocoding API (when google_api_key is provided), and fall back to OSM Nominatim on failure.
+    - On success returns: {"lat": <float>, "lng": <float>}
+    - On failure raises ValueError.
+    - When debug=True, prints which service/URL (key redacted), response snippets, and errors.
     """
     import requests
     from urllib.parse import urlencode
@@ -190,7 +190,7 @@ def geocode_address(
         try:
             params = {"address": address, "key": google_api_key}
             url = f"https://maps.googleapis.com/maps/api/geocode/json?{urlencode(params)}"
-            url_dbg = url.replace(google_api_key, "****")  # 避免泄露 key
+            url_dbg = url.replace(google_api_key, "****")  # Avoid leaking the key
             if debug:
                 print(f"[geocode] trying Google Geocoding: {url_dbg}")
             r = requests.get(url, timeout=timeout)
@@ -213,7 +213,7 @@ def geocode_address(
     else:
         raise ValueError("Expect `GOOGLE_MAPS_API_KEY`!!")
 
-    # --- 2) OSM Nominatim 回退 ---
+    # --- 2) OSM Nominatim fallback ---
     try:
         params = {"q": address, "format": "json", "limit": 1}
         headers = {"User-Agent": "geo-eval/1.0 (contact: you@example.com)"}
@@ -243,7 +243,7 @@ def geocode_address(
 
 
 # =========================
-# 函数三：两点距离（km）
+# Function 3: distance between two points (km)
 # =========================
 
 def _coerce_lat_lng(d: Dict[str, Any]) -> Tuple[float, float]:
@@ -264,9 +264,9 @@ def _coerce_lat_lng(d: Dict[str, Any]) -> Tuple[float, float]:
 
 def haversine_km(p1: Dict[str, Any], p2: Dict[str, Any]) -> float:
     """
-    计算两点球面距离（千米）。
-    p1 / p2: dict，包含 lat / lng（或 latitude / longitude / lon / long）
-    使用 WGS84 平均地球半径 6371.0088 km
+    Compute great-circle distance between two points (kilometers).
+    p1 / p2: dict containing lat / lng (or latitude / longitude / lon / long)
+    Uses WGS84 mean Earth radius 6371.0088 km
     """
     import math
     lat1, lng1 = _coerce_lat_lng(p1)
@@ -284,11 +284,13 @@ def haversine_km(p1: Dict[str, Any], p2: Dict[str, Any]) -> float:
 
 
 if __name__ == "__main__":
-    text = "Based on the visual clues in the image, I have located the place.\n\n**Analysis of Clues:**\n\n1.  **Signage:** In the cropped images, several business signs are visible. One clearly reads \"**STEILO BAR**\". Another sign next to it is for \"**tipwin**,\" a sports betting company. A sign above the bar indicates a \"**FRISEUR**\" (German for hairdresser).\n2.  **License Plates:** A German license plate is visible on a black car parked on the left. The city code appears to be \"**HH**,\" which stands for Hansestadt Hamburg (Hanseatic City of Hamburg).\n3.  **Architecture:** The buildings, particularly the large apartment blocks and the mixed-use commercial building with a parking garage, are characteristic of post-war urban development in many German cities.\n\n**Search and Verification:**\n\nCombining these clues, a search for \"STEILO BAR Hamburg\" immediately leads to an address. Verifying this location on Google Maps confirms the presence of both the Steilo Bar and a tipwin betting shop at the **Einkaufszentrum (shopping center) Rahlstedt-Ost**.\n\nThe photo was taken on **Schöneberger Straße** in Hamburg, Germany, looking towards the shopping center.\n\n**Conclusion:**\n\nThe location of the image is on **Schöneberger Straße, 22149 Hamburg, Germany**, in front of the Einkaufszentrum Rahlstedt-Ost.\n\nYou can see this exact spot on [Google Maps Street View](https://www.google.com/maps/@53.5999251,10.1557007,3a,75y,283.43h,94.94t/data=!3m6!1e1!3m4!1s0Qv7M-Wc1tI-L0R-Gf0YfA!2e0!7i16384!8i8192?entry=ttu)."
+    TEST_MESSAGE = "Based on the visual clues in the image, I have located the place.\n\n**Analysis of Clues:**\n\n1.  **Signage:** In the cropped images, several business signs are visible. One clearly reads \"**STEILO BAR**\". Another sign next to it is for \"**tipwin**,\" a sports betting company. A sign above the bar indicates a \"**FRISEUR**\" (German for hairdresser).\n2.  **License Plates:** A German license plate is visible on a black car parked on the left. The city code appears to be \"**HH**,\" which stands for Hansestadt Hamburg (Hanseatic City of Hamburg).\n3.  **Architecture:** The buildings, particularly the large apartment blocks and the mixed-use commercial building with a parking garage, are characteristic of post-war urban development in many German cities.\n\n**Search and Verification:**\n\nCombining these clues, a search for \"STEILO BAR Hamburg\" immediately leads to an address. Verifying this location on Google Maps confirms the presence of both the Steilo Bar and a tipwin betting shop at the **Einkaufszentrum (shopping center) Rahlstedt-Ost**.\n\nThe photo was taken on **Schöneberger Straße** in Hamburg, Germany, looking towards the shopping center.\n\n**Conclusion:**\n\nThe location of the image is on **Schöneberger Straße, 22149 Hamburg, Germany**, in front of the Einkaufszentrum Rahlstedt-Ost.\n\nYou can see this exact spot on [Google Maps Street View](https://www.google.com/maps/@53.5999251,10.1557007,3a,75y,283.43h,94.94t/data=!3m6!1e1!3m4!1s0Qv7M-Wc1tI-L0R-Gf0YfA!2e0!7i16384!8i8192?entry=ttu)."
+
+
+    text = TEST_MESSAGE
     addr = extract_pred_address_v2(text, timeout=30, debug=True)
     addr_now = "Tencent beijing Office, Beijing, China"
 
-    # addr = "honiara, guadalcanal, solomon islands"
     coord_extract = geocode_address(addr, timeout=20, debug=True)
     coord_now = geocode_address(addr_now, timeout=20, debug=True)
     print(f"The location of {addr} is {coord_extract}")

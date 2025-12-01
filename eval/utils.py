@@ -22,30 +22,30 @@ from autogen.oai.client import OpenAIWrapper
 
 def get_tool_calls(response_message: str):
     """
-    从模型输出中提取多个 <tool_call>...</tool_call>，宽松解析为动作字典列表。
-    解析顺序：清洗 → json.loads → ast.literal_eval → 正则兜底字段抽取。
-    永不抛异常；解析失败的块会被跳过。
+    Extract multiple <tool_call>...</tool_call> blocks from model output, loosely parsing into a list of action dicts.
+    Parsing order: cleanup → json.loads → ast.literal_eval → regex fallback field extraction.
+    Never raises; blocks that fail to parse are skipped.
     """
     def _cleanup(s: str) -> str:
-        # 去掉代码围栏/语言标签
+        # Remove code fences/language tags
         s = re.sub(r"```(?:json|python)?", "", s, flags=re.IGNORECASE).replace("```", "")
-        # 归一化花括号
+        # Normalize curly braces
         s = s.replace("{{", "{").replace("}}", "}")
-        # 智能引号归一化
+        # Normalize smart quotes
         s = s.replace("“", '"').replace("”", '"').replace("’", "'").replace("‘", "'")
-        # 去掉行首行尾空白
+        # Trim leading/trailing whitespace
         s = s.strip()
-        # 删除尾随逗号
+        # Remove trailing commas
         s = re.sub(r",\s*([}\]])", r"\1", s)
         return s
 
     def _loads_loose(s: str):
-        # 尝试 JSON
+        # Try JSON
         try:
             return json.loads(s)
         except Exception:
             pass
-        # 尝试 Python 字面量（将 true/false/null 转为 Python）
+        # Try Python literals (convert true/false/null to Python)
         s2 = re.sub(r"\btrue\b", "True", s, flags=re.IGNORECASE)
         s2 = re.sub(r"\bfalse\b", "False", s2, flags=re.IGNORECASE)
         s2 = re.sub(r"\bnull\b", "None", s2, flags=re.IGNORECASE)
@@ -55,7 +55,7 @@ def get_tool_calls(response_message: str):
             return None
 
     def _fallback_parse(s: str):
-        # 兜底正则抽取字段
+        # Regex fallback field extraction
         def _pick(pattern, text, flags=re.IGNORECASE | re.DOTALL):
             m = re.search(pattern, text, flags)
             return m.group(1).strip() if m else None
@@ -63,7 +63,7 @@ def get_tool_calls(response_message: str):
         # id
         id_str = _pick(r'"id"\s*:\s*(\d+)|\bid\s*:\s*(\d+)', s)
         if id_str is None:
-            # 没 id 就放弃这个块
+            # No id → abandon this block
             return None
         id_val = int(id_str)
 
@@ -84,7 +84,7 @@ def get_tool_calls(response_message: str):
             except Exception:
                 pass
         if query_txt and ("bbox_2d" not in args):
-            # 反转义
+            # Unescape
             args["query"] = bytes(query_txt, "utf-8").decode("unicode_escape")
 
         if not args:
@@ -96,12 +96,12 @@ def get_tool_calls(response_message: str):
         return action
 
     actions = []
-    # 提取所有 tool_call 块
+    # Extract all tool_call blocks
     for m in re.finditer(r"<tool_call>(.*?)</tool_call>", response_message, re.IGNORECASE | re.DOTALL):
         raw = m.group(1).strip()
         cleaned = _cleanup(raw)
 
-        # 有些模型会输出一个数组包住多个对象
+        # Some models output an array wrapping multiple objects
         candidate = _loads_loose(cleaned)
         if candidate is not None:
             if isinstance(candidate, list):
@@ -111,13 +111,13 @@ def get_tool_calls(response_message: str):
             elif isinstance(candidate, dict):
                 actions.append(candidate)
             else:
-                # 非 dict/list，继续兜底
+                # Not dict/list — continue with fallback
                 fb = _fallback_parse(cleaned)
                 if fb:
                     actions.append(fb)
             continue
 
-        # 结构化失败 → 兜底字段抽取
+        # Structured parsing failed → fallback field extraction
         fb = _fallback_parse(cleaned)
         if fb:
             actions.append(fb)
