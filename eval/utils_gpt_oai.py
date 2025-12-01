@@ -23,7 +23,7 @@ client = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", ""),
     # base_url="https://172.203.11.191:3826/v1",
 )
-MODEL_NAME = 'gpt-5'
+MODEL_NAME = 'gpt-5-nano'
 MAX_COMPLETION_TOKENS = 10240
 
 def chat_gpt5(messages, model_name=MODEL_NAME, max_completion_tokens=MAX_COMPLETION_TOKENS):
@@ -41,4 +41,4 @@ if __name__ == "__main__":
         {"role": "user", "content": "Hello, how are you?"}
     ]
     response = chat_gpt5(messages)
-    print(response)
+    print_hl(response)
