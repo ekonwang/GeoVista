@@ -21,7 +21,7 @@ from utils import print_hl, print_error
 
 client = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", ""),
-    # base_url="https://172.203.11.191:3826/v1",
+    api_base=os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1"
 )
 MODEL_NAME = 'gpt-5-nano'
 MAX_COMPLETION_TOKENS = 10240
