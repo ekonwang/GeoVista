@@ -79,17 +79,6 @@ fi
 echo "🚀 Running: ${CMD[*]}"
 "${CMD[@]}" | tee "$LOG_PATH" 2>&1
 
-# evaluation
-# TIMESTAMP=$timestamp
-# python3 eval/eval_infer_geolocation_1014_csv.py \
-#   --pred_jsonl .temp/outputs/inference_agent_benchmarks/${BENCHMARK}/${MODEL_NAME}/inference_${TIMESTAMP}.jsonl \
-#   --out_jsonl .temp/outputs/inference_agent_benchmarks/${BENCHMARK}/${MODEL_NAME}/evaluation_${TIMESTAMP}.jsonl \
-#   --dataset_dir .temp/datasets/${BENCHMARK} \
-#   --num_samples 1500 \
-#   --model_verifier \
-#   --workers 8 \
-#   --timeout 120 --debug | tee .temp/outputs/inference_agent_benchmarks/${BENCHMARK}/${MODEL_NAME}/evaluation_${TIMESTAMP}.log 2>&1
-
 
 echo "✅ Results saved to: $OUTPUT_PATH"
 echo "📝 Log saved to     : $LOG_PATH"

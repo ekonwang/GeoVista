@@ -129,105 +129,6 @@ def _load_geobench_records(
             f"Failed to load dataset {dataset_id}:{split} via datasets.load_dataset: {exc}"
         ) from exc
 
-    image_cache_dir = Path(temp_dir or ".temp/hf_images")
-    image_cache_dir.mkdir(parents=True, exist_ok=True)
-
-    def _infer_ext_from_path(path: Optional[str], default: str = "jpg") -> str:
-        if path:
-            suffix = Path(path).suffix.lower().lstrip(".")
-            if suffix:
-                return "jpg" if suffix in ("jpeg", "jpg") else suffix
-        return default
-
-    def _build_filename(uid: str, idx: int, ext: str) -> str:
-        safe_uid = re.sub(r"[^a-zA-Z0-9_.-]", "_", uid) or f"sample_{idx}"
-        return f"{safe_uid}_{idx}_{uuid.uuid4().hex[:8]}.{ext}"
-
-    def _save_bytes(content: bytes, uid: str, idx: int, ext_hint: str) -> str:
-        ext = ext_hint or "jpg"
-        target_path = image_cache_dir / _build_filename(uid, idx, ext)
-        with open(target_path, "wb") as fp:
-            fp.write(content)
-        return str(target_path)
-
-    def _copy_file(src_path: str, uid: str, idx: int, ext_hint: Optional[str]) -> str:
-        ext = _infer_ext_from_path(src_path, ext_hint or "jpg")
-        dest_path = image_cache_dir / _build_filename(uid, idx, ext)
-        shutil.copyfile(src_path, dest_path)
-        return str(dest_path)
-
-    def _pil_to_bytes(pil_img: Image.Image, ext_hint: Optional[str]) -> Tuple[bytes, str]:
-        preferred_ext = (ext_hint or pil_img.format or "png").lower()
-        if preferred_ext == "jpeg":
-            preferred_ext = "jpg"
-        fmt = "JPEG" if preferred_ext == "jpg" else preferred_ext.upper()
-        buf = io.BytesIO()
-        try:
-            pil_img.save(buf, format=fmt)
-        except Exception:
-            buf = io.BytesIO()
-            pil_img.save(buf, format="PNG")
-            preferred_ext = "png"
-        return buf.getvalue(), preferred_ext
-
-    def _materialize_image(image_info: Any, uid: str, idx: int) -> Optional[str]:
-        if image_info is None:
-            return None
-
-        source_path: Optional[str] = None
-        image_bytes: Optional[bytes] = None
-        ext_hint = "jpg"
-
-        if isinstance(image_info, dict):
-            source_path = image_info.get("path") or image_info.get("file")
-            ext_hint = _infer_ext_from_path(source_path)
-            raw_bytes = image_info.get("bytes")
-            if raw_bytes:
-                image_bytes = raw_bytes
-        elif isinstance(image_info, str):
-            source_path = image_info
-            ext_hint = _infer_ext_from_path(source_path)
-        elif isinstance(image_info, Image.Image):
-            image_bytes, ext_hint = _pil_to_bytes(image_info, image_info.format)
-        else:
-            if hasattr(image_info, "save"):
-                buf = io.BytesIO()
-                try:
-                    image_info.save(buf, format="PNG")
-                    image_bytes = buf.getvalue()
-                    ext_hint = "png"
-                except Exception:
-                    image_bytes = None
-
-        if source_path and os.path.exists(source_path):
-            return _copy_file(source_path, uid, idx, ext_hint)
-
-        if image_bytes:
-            return _save_bytes(image_bytes, uid, idx, ext_hint)
-
-        if isinstance(image_info, dict):
-            array_data = image_info.get("array")
-            if array_data is not None:
-                try:
-                    pil_img = Image.fromarray(array_data)
-                    image_bytes_inner, ext_inner = _pil_to_bytes(pil_img, None)
-                    return _save_bytes(image_bytes_inner, uid, idx, ext_inner)
-                except Exception as exc:
-                    if debug:
-                        _log_kv(True, "Array decode failed", {
-                            "uid": uid,
-                            "index": idx,
-                            "error": str(exc)
-                        })
-
-        if debug:
-            _log_kv(True, "Materialize skipped", {
-                "uid": uid,
-                "index": idx,
-                "reason": "no path or bytes available"
-            })
-        return None
-
     records: List[Dict[str, Any]] = []
     for idx, sample in enumerate(dataset):
         if limit is not None and len(records) >= limit:
@@ -245,13 +146,12 @@ def _load_geobench_records(
 
         uid = metadata_obj.get("uid") or sample.get("uid") or f"sample_{idx}"
 
-        image_info = sample.get("image")
-        image_path = _materialize_image(image_info, uid, idx)
-
-        if not image_path:
-            if debug:
-                _log_kv(True, "Skip sample", {"index": idx, "uid": uid, "reason": "failed to materialize image"})
-            continue
+        image_info = sample.get("raw_image_path")
+        if not os.path.exists(image_info):
+            image_path = os.path.join(dataset_id, image_info)
+        else:
+            image_path = image_info
+        assert os.path.exists(image_path), f"Image path does not exist: {image_path}, please check the dataset {dataset_id}:{split} sanity, and ensure images are properly downloaded (https://huggingface.co/datasets/LibraTree/GeoVistaBench)."
 
         records.append({
             "uid": uid,
@@ -319,15 +219,17 @@ def run_inference_for_image(image_path: str, temp_dir: str, debug: bool = False)
 
     while manager.round_count < MAX_ROUNDS:
         try:
-            print_hl(f"Round {manager.round_count+1} | calling model")
+            if debug:
+                print_hl(f"Round {manager.round_count+1} | calling model")
             _log_kv(debug, "Manager state before call", {
                 "round_count": manager.round_count,
                 "crop_calls": manager.crop_call_count,
                 "search_calls": manager.search_call_count
             })
             response = chat_gemini(messages)
-            print_hl("Assistant >")
-            print(response if isinstance(response, str) else str(response))
+            if debug:
+                print_hl("Assistant >")
+                print(response if isinstance(response, str) else str(response))
             messages.append({"role": "assistant", "content": reformat_response(response)})
             print_messages.append({"role": "assistant", "content": response})
             manager.increment_round()
@@ -511,9 +413,9 @@ def _process_one_record(i: int, total: int, record: Dict[str, Any], args: argpar
 
 def main():
     parser = argparse.ArgumentParser(description="Run inference on the GeoBench Hugging Face dataset using agent tool mode")
-    parser.add_argument("--dataset_id", type=str, default=".temp/datasets/LibraTree/GeoBench",
+    parser.add_argument("--dataset_id", type=str, default=".temp/datasets/LibraTree/GeoVistaBench",
                        help="Hugging Face dataset identifier to load (default: GeoBench)")
-    parser.add_argument("--split", type=str, default="train",
+    parser.add_argument("--split", type=str, default="test",
                        help="Dataset split to load from the Hugging Face repo")
     parser.add_argument("--cache_dir", type=str, default=None,
                        help="Optional datasets cache directory")
@@ -521,9 +423,9 @@ def main():
                        help="Directory to materialize HF dataset images for inference")
     parser.add_argument("--hf_token", type=str, default=os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_TOKEN"),
                        help="Optional Hugging Face token for private datasets")
-    parser.add_argument("--output", type=str, default=".temp/inference_results_debug.jsonl",
+    parser.add_argument("--output", type=str, default=".temp/outputs/inference/inference_results_debug.jsonl",
                        help="Output JSONL file")
-    parser.add_argument("--temp_dir", type=str, default=".temp/outputs/inference",
+    parser.add_argument("--temp_dir", type=str, default=".temp/outputs/inference_crops",
                        help="Temporary directory for cropped images")
     parser.add_argument("--num_samples", type=int, default=None,
                        help="Number of samples to process (default: all)")
