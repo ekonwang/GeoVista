@@ -178,7 +178,7 @@ You can acclerate the evaluation process by changing the `workers` argument in t
 
 ## Training Pipeline
 
-- To be released soon.
+GeoVista is trained via two stages: (1) [Cold Start](https://huggingface.co/datasets/LibraTree/GeoVista-Cold-Start) SFT and (2) Reinforcement Learning.
 
 ## BibTex
 Please consider citing our paper and starring this repo if you find them helpful. Thank you!
