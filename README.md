@@ -185,9 +185,7 @@ GeoVista is trained in two stages: (1) [Cold‑Start](https://huggingface.co/dat
   <img src="assets/huggingface-cold-start.webp" width="80%">
 </p>
 
-- Cold‑Start SFT: We have open‑sourced the 1.5k‑sample [GeoVista‑Cold‑Start](https://
-huggingface.co/datasets/LibraTree/GeoVista-Cold-Start) dataset used to train [GeoVista‑SFT‑7B]
-(https://huggingface.co/LibraTree/GeoVista-SFT-7B). Download the dataset and run the SFT training
+- Cold‑Start SFT: We have open‑sourced the 1.5k‑sample [GeoVista‑Cold‑Start](https://huggingface.co/datasets/LibraTree/GeoVista-Cold-Start) dataset used to train [GeoVista‑SFT‑7B](https://huggingface.co/LibraTree/GeoVista-SFT-7B). Download the dataset and run the SFT training
 script at `scripts/sft.py`.
 
 - Reinforcement Learning: Coming soon.
