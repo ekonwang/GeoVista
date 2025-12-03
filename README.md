@@ -180,6 +180,14 @@ You can acclerate the evaluation process by changing the `workers` argument in t
 
 GeoVista is trained via two stages: (1) [Cold Start](https://huggingface.co/datasets/LibraTree/GeoVista-Cold-Start) SFT and (2) Reinforcement Learning.
 
+<p align="center">
+  <img src="assets/huggingface-cold-start.webp" width="80%">
+</p>
+
+- Cold Start SFT: For compliance requirements, we filtered out part of the cold start thinking trajectory data and upload 1k5 samples to [HuggingFace](https://huggingface.co/datasets/LibraTree/GeoVista-Cold-Start). You can download the dataset and run the SFT training script `scripts/sft.py`.
+
+- Reinforcement Learning: To be released soon.
+
 ## BibTex
 Please consider citing our paper and starring this repo if you find them helpful. Thank you!
 ```bibtex
