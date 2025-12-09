@@ -8,7 +8,7 @@ COLD_START_DATA_DIR=.temp/datasets/LibraTree/GeoVista-Cold-Start
 
 BASE_MODEL=Qwen2.5-VL-7B-Instruct
 MODEL_PATH=.temp/checkpoints/Qwen/Qwen2.5-VL-7B-Instruct
-OUTPUT_DIR=.temp/checkpoints
+OUTPUT_DIR=.temp/checkpoints/${RUN_NAME}
 DATA_PATH=${COLD_START_DATA_DIR}/data/train/data-00000-of-00001.parquet
 
 export WANDB_API_KEY=$WANDB_API_KEY
@@ -24,7 +24,7 @@ mkdir -p ./logs
 nnode=1
 nrank=$((INDEX%nnode))
 MASTER_ADDR='127.0.0.1'
-MASTER_PORT=12356
+MASTER_PORT=12566
 
 echo $MASTER_ADDR; echo $nnode; echo $nrank
 lsof -ti:${MASTER_PORT} | xargs kill -9

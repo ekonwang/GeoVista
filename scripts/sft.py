@@ -167,12 +167,25 @@ def convert_example(example):
     if image_paths is None:
         image_paths = example.get('image')
     img_idx = 0
+
+    if isinstance(conversations, dict):
+        roles = conversations.get('from', [])
+        values = conversations.get('value', [])
+        if not isinstance(roles, list):
+            roles = [roles]
+        if not isinstance(values, list):
+            values = [values]
+        conversations = [
+            {'from': role, 'value': value}
+            for role, value in zip(roles, values)
+        ]
+
     for item in conversations:
         content = []
-        if item['from'] == 'human':
-            role = 'user'
-        else:
+        if item['from'] == 'assistant':
             role = 'assistant'
+        else:
+            role = 'user'
 
         if '<image>' in item['value']:
             assert item['value'].count('<image>') == 1  # only support one image currently
