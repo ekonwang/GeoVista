@@ -250,11 +250,6 @@ def collate_fn(examples):
     image_inputs = [process_vision_info(example["messages"])[0] for example in examples]
     batch = processor(text=texts, images=image_inputs, return_tensors="pt", padding=True)
     labels = batch["input_ids"].clone()
-    # print(labels.size())
-    # print('per_device_bsz ', len(texts))
-    # labels[labels == processor.tokenizer.pad_token_id] = -100
-    # image_token_id = processor.tokenizer.convert_tokens_to_ids(processor.image_token)
-    # labels[labels == image_token_id] = -100
     # Mask targets using token markers to avoid image token expansion mismatch
     sep_start = '<|im_start|>assistant\n'
     sep_end = '<|im_end|>\n'
@@ -326,11 +321,10 @@ def collate_fn(examples):
 
     batch["labels"] = labels
 
-    print(batch['input_ids'].shape)
+    # print(batch['input_ids'].shape)
     if int(batch['input_ids'].shape[1]) > 32768:
         print(f'{examples[0]["id"]} too long!!')
 
-    # 释放中间变量
     batch['input_ids'] = batch['input_ids'][:,:32768]
     batch['labels'] = batch['labels'][:,:32768]
     batch['attention_mask'] = batch['attention_mask'][:,:32768]
