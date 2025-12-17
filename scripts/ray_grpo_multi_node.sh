@@ -9,37 +9,15 @@
 
 set -x
 
-# export NCCL_IB_GID_INDEX=3
-# export NCCL_IB_SL=3
-# export NCCL_CHECKS_DISABLE=1
-# export NCCL_P2P_DISABLE=0
-# export NCCL_IB_DISABLE=0
-# export NCCL_LL_THRESHOLD=16384
-# export NCCL_IB_CUDA_SUPPORT=1
-# export NCCL_SOCKET_IFNAME=bond1
-# export UCX_NET_DEVICES=bond1
-# export NCCL_IB_HCA=mlx5_bond_1,mlx5_bond_5,mlx5_bond_3,mlx5_bond_7,mlx5_bond_4,mlx5_bond_8,mlx5_bond_2,mlx5_bond_6
-# export NCCL_COLLNET_ENABLE=0
-# export SHARP_COLL_ENABLE_SAT=0
-# export NCCL_NET_GDR_LEVEL=2
-# export NCCL_IB_QPS_PER_CONNECTION=4
-# export NCCL_IB_TC=160
-# export NCCL_PXN_DISABLE=0
-# export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-# export PYTHONPATH=/mnt/lzy/DeepEyes:$PYTHONPATH
-
-# export http_proxy=http://star-proxy.oa.com:3128
-# export https_proxy=http://star-proxy.oa.com:3128
-
-export WANDB_API_KEY=
+export WANDB_API_KEY=${WANDB_API_KEY}
 export WANDB_RUN_NAME="ray_grpo_multi_node"
 export WANDB_PROJECT="GeoVista"
 export SAVE_CHECKPOINT_DIR=/apdcephfs_gy2/share_303214312/rickykwang/deepeyes_logs
 export REF_MODEL_PATH=/home/models/1023_sft_search_v4_seedvl
 
 export WORLD_SIZE=8
-export VISUAL_DATASET_MAZE=/mnt/private/agent_workspace/hunyuan-o3/.temp/datasets/1023_rl_data_parquet_12k/data.parquet
-export VISUAL_DATASET_MAZE_VAL=/mnt/private/agent_workspace/hunyuan-o3/.temp/datasets/1023_rl_data_val_jsonl_parquet/debug.parquet
+export VISUAL_DATASET_MAZE=
+export VISUAL_DATASET_MAZE_VAL=
 # TODO: DEBUG bsz=8
 export BATCH_SIZE=64
 
