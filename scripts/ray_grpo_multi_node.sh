@@ -31,7 +31,7 @@ set -x
 # export http_proxy=http://star-proxy.oa.com:3128
 # export https_proxy=http://star-proxy.oa.com:3128
 
-export WANDB_API_KEY=1283cf82ec790113dee72dab0e11b76812980e2f
+export WANDB_API_KEY=
 export WANDB_RUN_NAME="ray_grpo_multi_node"
 export WANDB_PROJECT="GeoVista"
 export SAVE_CHECKPOINT_DIR=/apdcephfs_gy2/share_303214312/rickykwang/deepeyes_logs
