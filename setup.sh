@@ -14,3 +14,5 @@ bash external/gpt-researcher-tool/search_setup_minimal.sh
 
 # finalize
 bash install_geovista.sh
+# langchain version should be 0.3.x
+pip install langchain-openai==0.3.29

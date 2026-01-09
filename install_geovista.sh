@@ -13,6 +13,7 @@ pip install evaluate
 pip install blake3
 pip install depyf==0.18.0
 pip install llguidance==0.7.9
+pip install xformers==0.0.29.post2
 pip install python-json-logger
 pip install torchaudio==2.6.0
 pip install xgrammer
@@ -48,5 +49,5 @@ pip install deepspeed==0.16.9
 # vllm serve
 pip install   "fastapi<0.113"   "pydantic<3"   "uvicorn[standard]"   starlette   aiohttp   httpx   websockets   watchfiles   prometheus_client   prometheus-fastapi-instrumentator   python-json-logger   
 pip install orjson   python-multipart   psutil   py-cpuinfo   partial-json-parser   ijson   pyzmq   msgspec   gguf   importlib-metadata   "mistral_common[opencv]"   pyyaml   six
-pip install "einops>=0.7"
+pip install "einops>=0.7" cachetools
 # pip install click==8.2.1
