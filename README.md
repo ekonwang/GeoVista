@@ -196,7 +196,7 @@ Please consider citing our paper and starring this repo if you find them helpful
 ```bibtex
 @misc{wang2025geovistawebaugmentedagenticvisual,
       title={GeoVista: Web-Augmented Agentic Visual Reasoning for Geolocalization}, 
-      author={Yikun Wang and Zuyan Liu and Ziyi Wang and Pengfei Liu and Han Hu and Yongming Rao},
+      author={Yikun Wang and Zuyan Liu and Ziyi Wang and Han Hu and Pengfei Liu and Yongming Rao},
       year={2025},
       eprint={2511.15705},
       archivePrefix={arXiv},
