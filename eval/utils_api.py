@@ -53,29 +53,43 @@ MINIMAX_API_BASE = os.environ.get(
 )
 
 # Default MiniMax text model and the models this evaluator knows how to configure.
-MINIMAX_MODEL_NAME = "MiniMax-M3"
+MINIMAX_MODEL_NAME = "MiniMax-M3.1-Flash"
+# Curated choices only; chat_minimax still accepts explicit legacy/custom IDs.
+# https://platform.minimax.io/docs/api-reference/text-openai-api
+# https://platform.minimax.io/docs/pricing/overview#models/text
 MINIMAX_MODELS = {
+    "MiniMax-M3.1-Flash": {
+        "context_window": 1_000_000,
+        "max_output_tokens": 524_288,
+        "input_modalities": ["text", "image", "video"],
+        "thinking": ["adaptive"],
+        "reasoning_effort": ["low", "medium", "high", "xhigh", "max"],
+        "default_reasoning_effort": "max",
+        "pricing_usd_per_million_tokens": {
+            "input": 0.15,
+            "output": 0.6,
+            "cache_read": 0.015,
+            "cache_write": None,
+        },
+    },
     "MiniMax-M3": {
         "context_window": 1_000_000,
         "input_modalities": ["text", "image", "video"],
         "thinking": ["adaptive", "disabled"],
+        # Standard pricing for <=512k input tokens, as published by MiniMax.
         "pricing_usd_per_million_tokens": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.06,
+            "cache_write": None,
+        },
+        "pricing_above_512k_usd_per_million_tokens": {
             "input": 0.6,
             "output": 2.4,
             "cache_read": 0.12,
             "cache_write": None,
         },
-    },
-    "MiniMax-M2.7": {
-        "context_window": 204_800,
-        "input_modalities": ["text"],
-        "thinking": ["always_on"],
-        "pricing_usd_per_million_tokens": {
-            "input": 0.3,
-            "output": 1.2,
-            "cache_read": 0.06,
-            "cache_write": 0.375,
-        },
+        "priority_price_multiplier": 1.5,
     },
 }
 
