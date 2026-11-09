@@ -8,8 +8,12 @@ from pathlib import Path
 from types import ModuleType
 from unittest.mock import patch
 
-import httpx
 import pytest
+from openai import _base_client
+
+# OpenAI 3 uses its bundled httpx2 transport, while earlier SDK releases use
+# httpx. Patch the transport selected by the installed SDK so tests stay offline.
+sdk_httpx = getattr(_base_client, "httpx2", None) or getattr(_base_client, "httpx", None)
 
 
 @pytest.fixture
@@ -33,7 +37,7 @@ def api(monkeypatch):
 
     def respond(request):
         requests.append(request)
-        return httpx.Response(200, json={
+        return sdk_httpx.Response(200, json={
             "id": "offline-completion",
             "object": "chat.completion",
             "created": 0,
@@ -42,7 +46,7 @@ def api(monkeypatch):
                          "finish_reason": "stop"}],
         })
 
-    transport = httpx.MockTransport(respond)
+    transport = sdk_httpx.MockTransport(respond)
 
     def load(region=None, base_url=None):
         if region is not None:
@@ -57,7 +61,7 @@ def api(monkeypatch):
         return module, requests
 
     # The real module constructs the real SDK clients, including regional URLs.
-    with patch.object(httpx.HTTPTransport, "handle_request", transport.handle_request):
+    with patch.object(sdk_httpx.HTTPTransport, "handle_request", transport.handle_request):
         yield load
     for module in modules:
         module.client.close()
