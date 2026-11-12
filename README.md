@@ -23,7 +23,7 @@
 </div>
 
 <div align="center">
-  <i>* This repository is intended solely for research purposes.</i>
+  <i>GeoVista is a research program inspired by geography games such as GeoGuessr.</i>
 </div>
 
 ## Quick Start
